@@ -1,0 +1,114 @@
+15 2 0 9 PALKmeans15 kmeans_practice4 xsjs0 3904 
+//var select_kmeans = "select ID, CENTER_ASSIGN, SalesAmount, AvgOverDueDays FROM DM_PAL/.PAL_KMEANS_VIEW";
+
+
+var select_kmeans = "select ID, CENTER_ASSIGN, SalesAmount, AVGOVERDUEDAYS FROM DM_PAL.PAL_KMEANS_CVIEW";
+//var select_kmeans = "select ID, CENTER_ASSIGN FROM DM_PAL.PAL_KMEANS_VIEW";
+
+//var TRUNC_RESULTS_SQL = "TRUNCATE TABLE \"_SYS_BIC\".\"PALABCanalysis.data::PAL_DEMO_TABLES.PAL_ABC_RESULT_TBL\"";
+var TRUNC_RESULTS_SQL = "TRUNCATE TABLE \"_SYS_BIC\".\"PALKmeans.data::PAL_DEMO_TABLES.PAL_kmeans_RESULT_TBL\"";
+
+/*
+ * Need to add select * from "_SYS_BIC"."PALABCanalysis/SAP_CA_kmeans" into PAL_KMEANS_DATA_TBL;
+ * so I can get actual input data 
+ * 
+ */
+
+var Get_INPUT_WRAPPER_SQL = "select * from \"_SYS_BIC\".\"PALABCanalysis/SAP_CA_kmeans\" into PAL_KMEANS_DATA_TBL"; 
+ 
+var CALL_PAL_WRAPPER_SQL = "CALL \"_SYS_AFL\".\"PAL_ABC\"" +  
+"(\"_SYS_BIC\".\"PALABCanalysis/SAP_CA_NETSALES\", " +  
+"\"_SYS_BIC\".\"PALABCanalysis.data::PAL_DEMO_TABLES.PAL_CONTROL_TBL\", " +  
+" \"_SYS_BIC\".\"PALABCanalysis.data::PAL_DEMO_TABLES.PAL_ABC_RESULT_TBL\")" +  
+" WITH OVERVIEW";  
+
+
+//CALL _SYS_AFL.PAL_KMEANS_PROC(PAL_KMEANS_DATA_TBL, #PAL_CONTROL_TBL, PAL_KMEANS_ASSIGN_TBL, PAL_KMEANS_CENTERS_TBL) with OVERVIEW;
+var CALL_PAL_WRAPPER_SQL = "Call \"_SYS_AFL\".\"PAL_KMEANS_PROC" +
+"(\"DM_PAL\".\"PAL_KMEANS_DATA_TBL\", " +
+"DM_PAL\".\"#PAL_CONTROL_TBL\", " + 
+"DM_PAL\".\"PAL_KMEANS_CENTERS_TBL\")";
+
+
+//"(\"DM_PAL\".\"PAL_KMEANS_DATA_TBL", ";
+
+//"DM_PAL"."PAL_KMEANS_DATA_TBL"
+/*
+var CALL_PAL_WRAPER_SQL = "CALL \"_SYS_AFL\".\"PAL_KMEANS_PROC"" +
+		"PAL_KMEANS_DATA_TBL", "PAL_CONTROL_TBL," +
+		"PAL_KMEANS_ASSIGN_TBL," +
+		"PAL_KMEANS_CENTERS_TBL"; 
+*/
+
+	
+		
+//alert(select_kmeans);
+
+var connection;
+
+function close(closables) {  
+          var closable;  
+          var i;  
+          for (i = 0; i < closables.length; i++) {  
+                    closable = closables[i];  
+                    if(closable) {  
+                              closable.close();  
+                    }  
+          }  
+}  
+
+function getKmeans(){
+		var getKmeansList=[];
+        var connection = $.db.getConnection();  
+        var statement = null;  
+        var resultSet = null;  
+        try{
+        	statement = connection.prepareStatement(select_kmeans);
+        	resultSet = statement.executeQuery();
+        	var	kmeans = {"data" : []};
+        	
+        	while (resultSet.next()){
+    			kmeans = {};
+    			kmeans.ID = resultSet.getString(1); 
+    			kmeans.CENTER_ASSIGN = resultSet.getInteger(2);
+    			kmeans.SalesAmount = resultSet.getDouble(3);
+    			kmeans.AvgOverDue = resultSet.getDouble(4);
+    			getKmeansList.push(kmeans);
+        		
+        	}
+        }finally{
+        	close([resultSet, statement, connection]);
+        }
+        return getKmeansList;
+		
+}
+
+function callPalWrapperProcedure() {  
+    var statementTrunc = null;  
+    var statementCall = null;
+    var inputResults = null;
+    var queryResultSet = null;  
+    try {  
+        statementTrunc = connection.prepareStatement(TRUNC_RESULTS_SQL);  
+        queryResultSet = statementTrunc.executeUpdate();
+        //added 2 below to build input table
+        inputResults = connection.prepareStatement(Get_INPUT_WRAPPER_SQL);
+        queryResultSet = inputResults.executeUpdate();
+        statementCall = connection.prepareCall(CALL_PAL_WRAPPER_SQL);  
+        statementCall.execute();  
+    } finally {  close(queryResultSet, statementTrunc, statementCall);  }  
+  }  
+  
+
+function doGet() {  
+          try{  
+                    $.response.contentType = "application/json";  
+                    $.response.setBody(JSON.stringify(getKmeans()));  
+          }  
+          catch(err){  
+                    $.response.contentType = "text/plain";  
+                    $.response.setBody("Error while executing query: [" + err.message + "]");  
+                    $.response.returnCode = 200;  
+          }  
+}  
+doGet(); 0 0 1 0 1 0 1 2 0 9 PALKmeans15 kmeans_practice4 xsjs0 

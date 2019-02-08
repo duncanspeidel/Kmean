@@ -1,0 +1,125 @@
+15 2 0 17 PALKmeans.paldemo23 palkmeans_analysis.view2 js0 4040 sap.ui.jsview("paldemo.palkmeans_analysis",
+{  
+	  bubbleChart1 : undefined,  
+	  bubbleChart2 : undefined,
+      getControllerName : function() {return null;},  
+      createBubbleControl : function(height, label, ds)
+      {
+    	  var bubble  = new sap.viz.ui5.Bubble({  
+                width : "100%",  
+                height : height,  
+                title : {  
+                  visible : true,  
+                  text : label
+                },  
+                dataset : ds  
+              });  
+    	  return bubble;
+      },                 
+      createDataset1 : function()
+      {  
+    	  return new sap.viz.ui5.data.FlattenedDataset({  
+    	  dimensions : [ {
+                axis : 1,
+                name : 'Customer Group',
+                value : "{CustomerGroup}"
+              }, {
+                  axis : 1,
+                  name : 'Customer',
+                  value : "{Customer}"
+                } ],
+
+            measures : [{
+              group : 1,
+              name : 'Average Past Due',
+              value : '{AvgOverDue}'
+            }, {
+              group : 2,
+              name : 'Sales Amount',
+              value : '{SalesAmount}'
+            }, {
+                group : 3,
+                name : 'Customer Group ID',
+                value : '{Group}'
+              }],
+
+            data : {
+              path : "/",
+              factory : function() {
+              }
+            }  
+              });  
+      },
+      createDataset2 : function()
+      {  
+    	  return new sap.viz.ui5.data.FlattenedDataset({  
+    	  dimensions : [ {
+                  axis : 1,
+                  name : 'Customer',
+                  value : "{Customer}"
+                }],
+            measures : [{
+                group : 1,
+                name : 'Customer Group ID',
+                value : '{Group}'
+              },
+              {
+              group : 2,
+              name : 'Average Past Due',
+              value : '{AvgOverDue}'
+            }, {
+              group : 3,
+              name : 'Sales Amount',
+              value : '{SalesAmount}'
+            } ],
+
+            data : {
+              path : "/",
+              factory : function() {
+              }
+            }  
+              });  
+      },
+      buildLayout : function()
+      {  
+    	  var oLayout = new sap.ui.commons.layout.MatrixLayout({  
+                id : 'matrix3',  
+                layoutFixed : true,  
+                columns : 1,  
+                width : '100%',
+                hieght : '100%'
+            });  
+    	  	//
+	        var oRow0 = new sap.ui.commons.layout.MatrixLayoutRow({id : 'Row0', width : '100%', height : '50%'});  
+	        var oRow1 = new sap.ui.commons.layout.MatrixLayoutRow({id : 'Row1', width : '100%', height : '50%'});  
+	        //
+	        oLayout.addRow(oRow0); 
+	        oLayout.addRow(oRow1);  
+	        //
+	        var oCell1 = new sap.ui.commons.layout.MatrixLayoutCell({id : 'Cell1', width : '100%' });  
+	        oCell1.addContent(this.bubbleChart1);  
+	        oRow0.addCell(oCell1); 
+	        //
+	        var oCell2 = new sap.ui.commons.layout.MatrixLayoutCell({id : 'Cell2', width : '100%' });  
+	        oCell2.addContent(this.bubbleChart2);  
+	        oRow1.addCell(oCell2); 
+	        return oLayout;  
+      },  
+      createContent : function(oController)
+      {  
+	      var analModel = new sap.ui.model.json.JSONModel();  
+	      analModel.loadData("kmeans.xsjs");
+	      //
+	      var ds1 = this.createDataset1();  
+	      var ds2 = this.createDataset2();  
+	      //
+	      this.bubbleChart1 = this.createBubbleControl("400px", 'Payment Performance and Revenue By Customer Classification', ds1);  
+	      this.bubbleChart1.setModel(analModel);  
+	      //
+	      this.bubbleChart2 = this.createBubbleControl("400px", 'Customer Classfication and Revenue By Customer Name', ds2);  
+	      this.bubbleChart2.setModel(analModel);
+	      //this.bubbleChart2.setXAxisLabelFormatter("Class");
+	      //
+	      return this.buildLayout();  
+      }  
+    });0 0 1 0 1 0 1 2 0 17 PALKmeans.paldemo23 palkmeans_analysis.view2 js0 

@@ -1,0 +1,11 @@
+15 2 0 20 PALKmeans.data.loads15 PAL_DEMO_TABLES5 hdbti0 199    import = [{
+
+      schema ="_SYS_BIC" ;
+
+      cdstable = "PALKmeans.data::PAL_DEMO_TABLES_2.PAL_CONTROL_TBL";
+
+      file = "PALKmeans.data.loads:pal_control.csv";
+
+      header = false;
+
+    }];0 2 2 2 0 14 PALKmeans.data17 PAL_DEMO_TABLES_221 __DT_CATALOG_OBJECT__0 0 0 2 2 0 20 PALKmeans.data.loads11 pal_control3 csv62 PALKmeans.data.loadsPALKmeans.data.loads/PAL_DEMO_TABLES.hdbti36 PALKmeans.data.loads/pal_control.csv0 1 0 1 0 1 2 0 20 PALKmeans.data.loads15 PAL_DEMO_TABLES5 hdbti0 

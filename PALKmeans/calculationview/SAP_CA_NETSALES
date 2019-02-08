@@ -1,0 +1,64 @@
+15 2 0 9 PALKmeans15 SAP_CA_NETSALES15 calculationview0 2550 <?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" schemaVersion="2.2" id="SAP_CA_NETSALES" applyPrivilegeType="ANALYTIC_PRIVILEGE" checkAnalyticPrivileges="true" defaultClient="crossClient" defaultLanguage="$$language$$" visibility="internal" calculationScenarioType="SCRIPT_BASED" dataCategory="DEFAULT" enforceSqlExecution="false" executionSemantic="UNDEFINED" scriptParametersCaseSensitive="true">
+  <descriptions defaultDescription="SAP_CA_NETSALES"/>
+  <localVariables/>
+  <variableMappings/>
+  <dataSources/>
+  <calculationViews>
+    <calculationView xsi:type="Calculation:SqlScriptView" id="Script_View">
+      <viewAttributes>
+        <viewAttribute datatype="VARCHAR" id="Customer" length="100"/>
+        <viewAttribute datatype="DOUBLE" id="Sales"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <definition> 
+ /********* Begin Procedure Script ************/ 
+ /***** Direct to the TABLES *****/
+ BEGIN 
+ 	var_out = 
+ 	Select
+ 				T1.&quot;CardName&quot; as &quot;Customer&quot;,
+ 				Sum(T0.&quot;DocTotal&quot;) as &quot;Sales&quot;
+ 				From &quot;SBODEMOUS&quot;.&quot;OINV&quot; T0 
+ 				Join &quot;SBODEMOUS&quot;.&quot;OCRD&quot; T1 On T0.&quot;CardCode&quot; =  T1.&quot;CardCode&quot;
+ 				Where T1.&quot;CardType&quot; = 'C'
+ 				Group By T1.&quot;CardName&quot;;
+ 	
+ 
+ 										
+END /********* End Procedure Script ************/</definition>
+    </calculationView>
+  </calculationViews>
+  <logicalModel id="Script_View">
+    <attributes>
+      <attribute id="Customer" order="1">
+        <descriptions defaultDescription="Customer"/>
+        <keyMapping columnObjectName="Script_View" columnName="Customer"/>
+      </attribute>
+    </attributes>
+    <calculatedAttributes/>
+    <privateDataFoundation>
+      <tableProxies/>
+      <joins/>
+      <layout>
+        <shapes/>
+      </layout>
+    </privateDataFoundation>
+    <baseMeasures>
+      <measure id="Sales" order="2" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Sales"/>
+        <measureMapping columnObjectName="Script_View" columnName="Sales"/>
+      </measure>
+    </baseMeasures>
+    <calculatedMeasures/>
+    <restrictedMeasures/>
+    <localDimensions/>
+  </logicalModel>
+  <layout>
+    <shapes>
+      <shape modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+        <upperLeftCorner x="40" y="85"/>
+      </shape>
+    </shapes>
+  </layout>
+</Calculation:scenario>0 2 2 2 0 9 SBODEMOUS4 OCRD21 __RT_CATALOG_OBJECT__19 start: 411; end 4170 0 2 2 0 9 SBODEMOUS4 OINV21 __RT_CATALOG_OBJECT__19 start: 378; end 3840 0 1 0 1 0 1 2 0 9 PALKmeans15 SAP_CA_NETSALES15 calculationview0 

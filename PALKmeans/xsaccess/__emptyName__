@@ -1,0 +1,22 @@
+15 2 0 9 PALKmeans0 8 xsaccess0 435 {
+     "exposed" : true,  
+                  
+     "authentication" :                                            
+            {
+               "method": "Form"   
+            },
+  
+     "cache_control" : "must-revalidate", 
+
+     "cors" :                      
+            {
+             "enabled" : false
+            }, 
+                     
+     "enable_etags" : false,
+
+     "force_ssl" : false,
+     
+     "prevent_xsrf" : true
+}
+0 0 1 0 1 0 1 2 0 9 PALKmeans0 8 xsaccess0 

@@ -1,0 +1,70 @@
+15 2 0 9 PALKmeans13 SAP_CA_kmeans15 calculationview0 3247 <?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" schemaVersion="2.3" id="SAP_CA_kmeans" applyPrivilegeType="ANALYTIC_PRIVILEGE" checkAnalyticPrivileges="true" defaultClient="crossClient" defaultLanguage="$$language$$" hierarchiesSQLEnabled="false" translationRelevant="true" visibility="reportingEnabled" calculationScenarioType="SCRIPT_BASED" dataCategory="CUBE" enforceSqlExecution="false" executionSemantic="UNDEFINED" scriptParametersCaseSensitive="true">
+  <descriptions defaultDescription="SAP_CA_kmeans"/>
+  <localVariables/>
+  <variableMappings/>
+  <dataSources/>
+  <calculationViews>
+    <calculationView xsi:type="Calculation:SqlScriptView" id="Script_View">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute datatype="INTEGER" id="ID"/>
+        <viewAttribute datatype="DOUBLE" id="SalesAmount"/>
+        <viewAttribute datatype="DOUBLE" id="AvgOverDueDays"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <definition> 
+ /********* Begin Procedure Script ************/ 
+ BEGIN
+  	
+ 	var_out = 
+		SELECT BP.&quot;DocEntry&quot; as &quot;ID&quot;, SUM(IV.&quot;DocTotal&quot;) as &quot;SalesAmount&quot;, ROUND(AVG(DAYS_BETWEEN(IV.&quot;DocDueDate&quot;, PH.&quot;DocDate&quot;))) as &quot;AvgOverDueDays&quot;
+		FROM SBODEMOGB.&quot;OINV&quot; IV
+	 	INNER JOIN SBODEMOGB.&quot;RCT2&quot; as PL ON IV.&quot;DocEntry&quot; = PL.&quot;DocEntry&quot;
+	    INNER JOIN SBODEMOGB.&quot;ORCT&quot; as PH ON PL.&quot;DocNum&quot; = PH.&quot;DocEntry&quot; 
+	    INNER JOIN SBODEMOGB.&quot;OCRD&quot; as BP ON BP.&quot;CardName&quot; = PH.&quot;CardName&quot; 
+	    WHERE &quot;PL&quot;.&quot;InvType&quot; = 13
+		GROUP BY &quot;BP&quot;.&quot;DocEntry&quot;
+		ORDER BY &quot;BP&quot;.&quot;DocEntry&quot;;
+
+END /********* End Procedure Script ************/</definition>
+    </calculationView>
+  </calculationViews>
+  <logicalModel id="Script_View">
+    <descriptions/>
+    <attributes>
+      <attribute id="ID" order="1">
+        <descriptions defaultDescription="Id"/>
+        <keyMapping columnObjectName="Script_View" columnName="ID"/>
+      </attribute>
+    </attributes>
+    <calculatedAttributes/>
+    <privateDataFoundation>
+      <tableProxies/>
+      <joins/>
+      <layout>
+        <shapes/>
+      </layout>
+    </privateDataFoundation>
+    <baseMeasures>
+      <measure id="SalesAmount" order="2" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="SalesAmount"/>
+        <measureMapping columnObjectName="Script_View" columnName="SalesAmount"/>
+      </measure>
+      <measure id="AvgOverDueDays" order="3" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="AvgOverDueDays"/>
+        <measureMapping columnObjectName="Script_View" columnName="AvgOverDueDays"/>
+      </measure>
+    </baseMeasures>
+    <calculatedMeasures/>
+    <restrictedMeasures/>
+    <localDimensions/>
+  </logicalModel>
+  <layout>
+    <shapes>
+      <shape modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+        <upperLeftCorner x="40" y="85"/>
+      </shape>
+    </shapes>
+  </layout>
+</Calculation:scenario>0 4 2 2 0 9 SBODEMOGB4 OCRD21 __RT_CATALOG_OBJECT__19 start: 584; end 5900 0 2 2 0 9 SBODEMOGB4 OINV21 __RT_CATALOG_OBJECT__19 start: 407; end 4130 0 2 2 0 9 SBODEMOGB4 ORCT21 __RT_CATALOG_OBJECT__19 start: 513; end 5190 0 2 2 0 9 SBODEMOGB4 RCT221 __RT_CATALOG_OBJECT__19 start: 441; end 4470 0 1 1 7 caption4 XTIT255 13 SAP_CA_kmeans1 3 14 AvgOverDueDays4 XCOL120 14 AvgOverDueDays2 ID4 XCOL120 2 Id11 SalesAmount4 XCOL120 11 SalesAmount1 2 0 9 PALKmeans13 SAP_CA_kmeans15 calculationview0 

@@ -1,0 +1,34 @@
+15 2 0 14 PALKmeans.data17 PAL_DEMO_TABLES_25 hdbdd0 473 namespace PALKmeans.data;
+
+     
+
+    @Schema: '_SYS_BIC'
+
+    context PAL_DEMO_TABLES_2 {
+
+     
+
+    @Catalog.tableType : #COLUMN
+
+    Entity PAL_kmeans_RESULT_TBL {
+
+      key ID: Integer;
+
+      CENTER_ASSIGN: Integer;
+      
+      DISTANCE: Double;
+
+    };
+
+    @Catalog.tableType : #COLUMN
+
+    Entity PAL_CONTROL_TBL{
+
+      key Name: String(100); 
+
+        intArgs: Integer null;
+
+        doubleArgs: Decimal(15,2) null;
+
+        strArgs: String(100) null;
+    };};0 0 1 0 1 0 1 2 0 14 PALKmeans.data17 PAL_DEMO_TABLES_25 hdbdd0 
